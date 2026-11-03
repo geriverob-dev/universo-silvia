@@ -1,0 +1,1105 @@
+:root {
+  --marfil: #fff9f2;
+  --rosa-empolvado: #e9b7c6;
+  --rosa-profundo: #b86b83;
+  --lavanda: #c9bce7;
+  --champagne: #d8b879;
+  --azul-noche: #22233f;
+  --sombra: rgba(34, 35, 63, 0.12);
+  --font-display: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  --font-ui: "DM Sans", system-ui, -apple-system, sans-serif;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --header-h: 3.25rem;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100%;
+  min-height: 100dvh;
+  font-family: var(--font-ui);
+  font-size: 1rem;
+  line-height: 1.55;
+  color: var(--azul-noche);
+  background: var(--azul-noche);
+  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body.reduced-motion * {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+}
+
+.loader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(165deg, var(--azul-noche) 0%, #2d3055 55%, var(--azul-noche) 100%);
+}
+
+.loader-inner {
+  text-align: center;
+  padding: 2rem;
+}
+
+.loader-moon {
+  width: 4.5rem;
+  height: 4.5rem;
+  margin: 0 auto 1.25rem;
+  animation: loader-float 3s ease-in-out infinite;
+}
+
+.loader-text {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  color: var(--marfil);
+  opacity: 0.85;
+  margin: 0;
+}
+
+@keyframes loader-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.app {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+.shell-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: calc(0.5rem + var(--safe-top)) 0.75rem 0.5rem;
+  pointer-events: none;
+}
+
+.shell-header > * {
+  pointer-events: auto;
+}
+
+.shell-btn {
+  font-family: var(--font-ui);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  border: none;
+  border-radius: 999px;
+  padding: 0.45rem 0.85rem;
+  cursor: pointer;
+  transition: background 0.25s ease, transform 0.2s ease, opacity 0.2s ease;
+}
+
+.shell-btn:focus-visible {
+  outline: 2px solid var(--champagne);
+  outline-offset: 2px;
+}
+
+.shell-btn--ghost {
+  background: rgba(255, 249, 242, 0.12);
+  color: var(--marfil);
+  backdrop-filter: blur(8px);
+}
+
+.shell-btn--ghost:hover:not(:disabled) {
+  background: rgba(255, 249, 242, 0.22);
+}
+
+.shell-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.progress-list {
+  display: flex;
+  gap: 0.35rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.progress-dot {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: rgba(255, 249, 242, 0.25);
+  transition: background 0.35s ease, transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+.progress-dot--current {
+  background: var(--champagne);
+  transform: scale(1.25);
+  box-shadow: 0 0 12px rgba(216, 184, 121, 0.55);
+}
+
+.progress-dot--done {
+  background: var(--rosa-empolvado);
+}
+
+.scene-root {
+  flex: 1;
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow: hidden;
+  outline: none;
+}
+
+.scene {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: calc(var(--header-h) + var(--safe-top) + 1rem) 1.25rem calc(1.5rem + var(--safe-bottom));
+  opacity: 0;
+  visibility: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+.scene--active {
+  opacity: 1;
+  visibility: visible;
+  z-index: 1;
+}
+
+.scene-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.scene-content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 32rem;
+  text-align: center;
+}
+
+.scene-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.75rem, 5vw, 2.75rem);
+  line-height: 1.2;
+  margin: 0 0 1rem;
+  color: var(--marfil);
+  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.25);
+}
+
+.scene-lines {
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 3.5vw, 1.45rem);
+  color: rgba(255, 249, 242, 0.92);
+  margin: 0 0 1.5rem;
+  min-height: 3.5em;
+}
+
+.scene-lines--dark {
+  color: var(--azul-noche);
+  text-shadow: none;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 3rem;
+  min-width: 12rem;
+  padding: 0.75rem 1.75rem;
+  font-family: var(--font-ui);
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--azul-noche);
+  background: linear-gradient(145deg, var(--marfil) 0%, #f5ebe0 100%);
+  border: 1px solid rgba(216, 184, 121, 0.45);
+  border-radius: 999px;
+  box-shadow: 0 8px 32px var(--sombra), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(34, 35, 63, 0.18);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-primary:focus-visible {
+  outline: 2px solid var(--champagne);
+  outline-offset: 3px;
+}
+
+.btn-primary--rose {
+  background: linear-gradient(145deg, var(--rosa-empolvado) 0%, #ddb8c4 100%);
+  color: var(--azul-noche);
+}
+
+.btn-primary--hidden {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.btn-micro-glow {
+  animation: btn-glow 2.5s ease-in-out infinite;
+}
+
+@keyframes btn-glow {
+  0%,
+  100% {
+    box-shadow: 0 8px 32px var(--sombra);
+  }
+  50% {
+    box-shadow: 0 8px 40px rgba(216, 184, 121, 0.35);
+  }
+}
+
+.btn-micro-pulse {
+  animation: btn-pulse 2s ease-in-out infinite;
+}
+
+@keyframes btn-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+}
+
+/* Scene 1 — night */
+.scene-bg--night {
+  background: radial-gradient(ellipse 120% 80% at 50% 20%, #3a3d6b 0%, var(--azul-noche) 55%);
+}
+
+.stars-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.moon-svg {
+  position: absolute;
+  top: 12%;
+  right: 10%;
+  width: min(28vw, 7rem);
+  height: auto;
+  filter: drop-shadow(0 0 24px rgba(216, 184, 121, 0.35));
+}
+
+.typewriter {
+  display: inline;
+}
+
+.heart-accent {
+  color: var(--rosa-empolvado);
+}
+
+/* Scene 2 — garden */
+.scene-2 .scene-bg {
+  background: linear-gradient(180deg, #cfe8f5 0%, #e8f4e8 45%, #d4e8c8 100%);
+}
+
+.garden-stage {
+  width: 100%;
+  max-width: 36rem;
+  margin: 0 auto 1rem;
+  min-height: min(52vh, 16rem);
+}
+
+.garden-svg {
+  width: 100%;
+  height: auto;
+  min-height: 14rem;
+  display: block;
+  filter: drop-shadow(0 8px 24px rgba(34, 35, 63, 0.08));
+}
+
+.garden-bouquet-layer {
+  transition: opacity 0.6s ease;
+}
+
+.garden-dedication {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-style: italic;
+  color: var(--rosa-profundo);
+  margin: 1rem 0;
+  opacity: 0;
+}
+
+/* Scene 3 — envelopes */
+.scene-3 .scene-bg {
+  background: linear-gradient(165deg, var(--marfil) 0%, #f3e8ef 50%, #ebe4f7 100%);
+}
+
+.envelopes-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem 1.25rem;
+  margin: 1.5rem 0;
+}
+
+.envelope-wrap {
+  perspective: 900px;
+  width: min(28vw, 7rem);
+  min-width: 5.5rem;
+}
+
+.envelope-body {
+  width: 100%;
+  height: auto;
+  display: block;
+  overflow: visible;
+}
+
+.envelope-flap {
+  transform-origin: 50px 30px;
+  transition: transform 0.65s ease, opacity 0.35s ease;
+}
+
+.envelope--open .envelope-flap {
+  transform: rotateX(165deg);
+}
+
+.envelope--open .env-seal {
+  opacity: 0;
+}
+
+.envelope--open .envelope-letter-peek {
+  opacity: 1 !important;
+}
+
+.envelope--open .env-front {
+  opacity: 0.85;
+}
+
+.envelope {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 0.72;
+  cursor: pointer;
+  border: none;
+  background: none;
+  padding: 0;
+  transform-style: preserve-3d;
+}
+
+.envelope:focus-visible {
+  outline: 2px solid var(--rosa-profundo);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+.envelope-label {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  color: var(--rosa-profundo);
+  margin-top: 0.5rem;
+  line-height: 1.3;
+  max-width: 6.5rem;
+}
+
+.envelope--open .envelope {
+  filter: drop-shadow(0 8px 16px rgba(184, 107, 131, 0.25));
+}
+
+.letter-panel {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: rgba(34, 35, 63, 0.45);
+  backdrop-filter: blur(6px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.35s ease, visibility 0.35s;
+}
+
+.letter-panel--open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.letter-card {
+  background: var(--marfil);
+  max-width: 22rem;
+  width: 100%;
+  padding: 2rem 1.75rem;
+  border-radius: 4px;
+  box-shadow: 0 24px 64px rgba(34, 35, 63, 0.25);
+  border: 1px solid rgba(216, 184, 121, 0.35);
+  position: relative;
+}
+
+.letter-card::before {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  border: 1px solid rgba(184, 107, 131, 0.2);
+  pointer-events: none;
+}
+
+.letter-poem {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  line-height: 1.65;
+  color: var(--azul-noche);
+  margin: 0 0 1.25rem;
+  white-space: pre-line;
+}
+
+/* Scene 4 — constellation (cielo en canvas, .scene-bg--night) */
+
+.sky-svg {
+  width: 100%;
+  max-width: 28rem;
+  min-height: 14rem;
+  margin: 0 auto;
+  display: block;
+  filter: drop-shadow(0 12px 32px rgba(0, 0, 0, 0.35));
+  border-radius: 12px;
+}
+
+.sky-star--enter {
+  opacity: 0;
+}
+
+.sky-star--dim-pulse .sky-star-halo {
+  animation: star-dim-pulse 3s ease-in-out infinite;
+}
+
+@keyframes star-dim-pulse {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+
+body.reduced-motion .sky-star--dim-pulse .sky-star-halo {
+  animation: none;
+}
+
+body.reduced-motion .cake-sparks path {
+  animation: none;
+}
+
+.sky-star {
+  cursor: pointer;
+  outline: none;
+}
+
+.sky-star .sky-star-shape {
+  filter: url(#cs-star-glow);
+  transition: fill 0.35s ease;
+}
+
+.sky-star--lit .sky-star-halo {
+  animation: star-breathe 2.8s ease-in-out infinite;
+}
+
+@keyframes star-breathe {
+  0%,
+  100% {
+    opacity: 0.65;
+  }
+  50% {
+    opacity: 0.95;
+  }
+}
+
+.star-btn:focus {
+  outline: none;
+}
+
+.star-btn:focus-visible .sky-star-shape {
+  stroke: var(--champagne);
+  stroke-width: 1px;
+}
+
+.sky-segment {
+  transition: opacity 0.45s ease, stroke 0.45s ease;
+}
+
+.wish-text {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  color: var(--marfil);
+  min-height: 2.5rem;
+  margin: 1rem 0;
+}
+
+/* Scene 5 — butterflies */
+.scene-5 .scene-bg {
+  background: linear-gradient(180deg, #b8dce8 0%, #c8e6c9 100%);
+}
+
+.butterfly-field {
+  position: relative;
+  width: 100%;
+  max-width: 28rem;
+  height: min(55vh, 24rem);
+  min-height: 16rem;
+  margin: 0 auto 1rem;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 28px rgba(34, 35, 63, 0.1);
+}
+
+.butterfly-garden-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.butterfly-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+
+.butterfly {
+  position: absolute;
+  width: 4.5rem;
+  height: 4rem;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: default;
+  touch-action: manipulation;
+  transform: translate(-50%, -50%);
+}
+
+.butterfly--luminous {
+  cursor: pointer;
+  width: 5.25rem;
+  height: 4.75rem;
+  z-index: 3;
+}
+
+.butterfly--ambient {
+  opacity: 0.55;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.butterfly-hit {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 3rem;
+  height: 3rem;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+}
+
+.butterfly--luminous .butterfly-hit {
+  width: 3.25rem;
+  height: 3.25rem;
+}
+
+.butterfly-art {
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none;
+}
+
+.butterfly--luminous .butterfly-art {
+  filter: drop-shadow(0 0 10px rgba(216, 184, 121, 0.45));
+}
+
+.butterfly--caught {
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.butterfly--caught .bf-halo {
+  opacity: 0.9 !important;
+}
+
+.butterfly-msg {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  color: var(--azul-noche);
+  min-height: 3rem;
+  padding: 0 0.5rem;
+}
+
+/* Scene 6 — book (cielo en canvas) */
+.scene-6 .scene-bg {
+  position: relative;
+  overflow: hidden;
+}
+
+.book-star-sky {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.book-star-sky-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.scene-6 .scene-content {
+  position: relative;
+  z-index: 1;
+  max-width: 36rem;
+}
+
+.book-wrap {
+  margin: 0 auto 1rem;
+  perspective: 1400px;
+  width: 100%;
+}
+
+.book-wrap--open {
+  perspective: none;
+}
+
+.book {
+  position: relative;
+  width: min(92vw, 34rem);
+  height: min(68dvh, 36rem);
+  margin: 0 auto;
+  cursor: pointer;
+  border: none;
+  background: none;
+  padding: 0;
+  transform-style: preserve-3d;
+  display: block;
+}
+
+.book-spine {
+  position: absolute;
+  left: 0;
+  top: 4%;
+  bottom: 4%;
+  width: 14px;
+  border-radius: 4px 0 0 4px;
+  background: linear-gradient(90deg, #6a3d50 0%, #8f5068 100%);
+  box-shadow: inset -2px 0 6px rgba(0, 0, 0, 0.2);
+  z-index: 2;
+}
+
+.book-cover {
+  position: absolute;
+  inset: 0;
+  left: 10px;
+  background: linear-gradient(145deg, var(--rosa-profundo) 0%, #7a4558 55%, #8f5068 100%);
+  border-radius: 6px 14px 14px 6px;
+  box-shadow: -12px 14px 40px rgba(34, 35, 63, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform-origin: left center;
+  transform-style: preserve-3d;
+  z-index: 3;
+  border: 1px solid rgba(216, 184, 121, 0.35);
+}
+
+.book-cover-frame {
+  position: relative;
+  width: 88%;
+  height: 88%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 1rem;
+}
+
+.book-cover-deco {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.book-cover-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 6vw, 2.75rem);
+  font-weight: 600;
+  color: var(--marfil);
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.25);
+  position: relative;
+  z-index: 1;
+}
+
+.book-cover-hint {
+  font-family: var(--font-ui);
+  font-size: clamp(0.75rem, 2.5vw, 0.875rem);
+  color: rgba(255, 249, 242, 0.75);
+  margin-top: 1rem;
+  letter-spacing: 0.04em;
+  position: relative;
+  z-index: 1;
+}
+
+.book-pages {
+  position: absolute;
+  inset: 6px 6px 6px 18px;
+  background: linear-gradient(180deg, #fffef9 0%, var(--marfil) 100%);
+  border-radius: 4px 12px 12px 4px;
+  box-shadow: inset 0 0 0 1px rgba(216, 184, 121, 0.25);
+  opacity: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.book-pages-inner {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  min-height: 0;
+  max-height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+  padding: 1.5rem 1.25rem 1.25rem;
+  padding-right: 1rem;
+  text-align: left;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-gutter: stable;
+  transform: translateZ(0);
+}
+
+.poem-margins {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0.45;
+  z-index: 0;
+}
+
+.book--open {
+  cursor: default;
+}
+
+.book--open .book-cover {
+  pointer-events: none;
+}
+
+.book--open .book-pages {
+  opacity: 1;
+  pointer-events: auto;
+  z-index: 4;
+}
+
+.poem-line {
+  font-family: var(--font-display);
+  font-size: clamp(1.05rem, 3.2vw, 1.2rem);
+  line-height: 1.65;
+  color: var(--azul-noche);
+  margin: 0 0 1rem;
+  opacity: 0;
+  position: relative;
+  z-index: 2;
+}
+
+.poem-line--title {
+  font-weight: 600;
+  font-size: clamp(1.15rem, 3.6vw, 1.35rem);
+  text-align: center;
+  margin-bottom: 0.75rem;
+}
+
+.poem-line--closing {
+  font-weight: 600;
+  text-align: center;
+  margin-top: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+body.reduced-motion .book-twinkle-star {
+  animation: none;
+}
+
+/* Scene 7 — cake (cielo en canvas, .scene-bg--night) */
+
+.cake-svg {
+  width: min(92vw, 18rem);
+  margin: 0 auto 1rem;
+  display: block;
+  filter: drop-shadow(0 12px 28px rgba(34, 35, 63, 0.2));
+}
+
+.cake-sparks path {
+  animation: cake-sparkle 2.5s ease-in-out infinite;
+}
+
+@keyframes cake-sparkle {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: scale(0.9);
+  }
+  50% {
+    opacity: 0.95;
+    transform: scale(1.05);
+  }
+}
+
+.candle-btn {
+  cursor: pointer;
+}
+
+.candle-btn:focus-visible {
+  outline: 2px solid var(--champagne);
+}
+
+.cake-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 4vw, 2.25rem);
+  color: var(--marfil);
+  margin: 0.75rem 0;
+  opacity: 0;
+}
+
+.confetti-canvas {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 50;
+}
+
+/* Scene 8 — final letter (cielo estrellado + carta clara encima) */
+.scene-8 .scene-bg {
+  position: relative;
+  overflow: hidden;
+}
+
+.final-scene {
+  position: relative;
+  width: 100%;
+  max-width: 28rem;
+  margin: 0 auto;
+}
+
+.final-sun {
+  position: absolute;
+  top: -4rem;
+  right: -2rem;
+  width: 8rem;
+  height: 8rem;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 220, 160, 0.55) 0%, rgba(255, 220, 160, 0) 70%);
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.final-frame {
+  position: relative;
+  background: linear-gradient(165deg, #fffef9 0%, var(--marfil) 45%, #f8f0e8 100%);
+  border: 1px solid rgba(216, 184, 121, 0.5);
+  border-radius: 10px;
+  padding: 0.75rem;
+  box-shadow:
+    0 4px 0 rgba(216, 184, 121, 0.15),
+    0 20px 50px rgba(34, 35, 63, 0.14);
+}
+
+.final-frame-inner {
+  position: relative;
+  border: 1px solid rgba(184, 107, 131, 0.25);
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem 1rem;
+  overflow: hidden;
+}
+
+.final-frame-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0.35;
+}
+
+.final-scroll {
+  position: relative;
+  z-index: 1;
+  max-height: min(58vh, 28rem);
+  overflow-y: auto;
+  padding: 0.5rem 0.35rem 0.25rem;
+  -webkit-overflow-scrolling: touch;
+}
+
+.final-salutation {
+  font-family: var(--font-display);
+  font-size: clamp(1.45rem, 4.5vw, 1.85rem);
+  font-weight: 600;
+  font-style: italic;
+  color: var(--rosa-profundo);
+  margin: 0 0 1.1rem;
+}
+
+.final-p {
+  font-family: var(--font-display);
+  font-size: clamp(1.02rem, 3.2vw, 1.12rem);
+  line-height: 1.7;
+  color: var(--azul-noche);
+  margin: 0 0 1rem;
+}
+
+.final-sign {
+  margin-top: 1.25rem;
+  padding-top: 0.75rem;
+  position: relative;
+}
+
+.final-sign-line {
+  display: block;
+  width: 4rem;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--champagne), transparent);
+  margin-bottom: 0.75rem;
+}
+
+.final-sign-text {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-style: italic;
+  color: var(--azul-noche);
+  margin: 0 0 0.35rem;
+}
+
+.final-sign-name {
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 3.5vw, 1.45rem);
+  font-weight: 600;
+  color: var(--rosa-profundo);
+  margin: 0;
+}
+
+.final-wax {
+  position: absolute;
+  right: 0.25rem;
+  bottom: 0;
+  width: 2.75rem;
+  height: 2.75rem;
+  opacity: 0.85;
+}
+
+.final-letter {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: var(--azul-noche);
+  white-space: pre-line;
+  margin: 0;
+}
+
+.petal-canvas {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 40;
+}
+
+.star-cursor {
+  position: fixed;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--champagne);
+  pointer-events: none;
+  z-index: 9998;
+  opacity: 0;
+  box-shadow: 0 0 12px var(--champagne);
+  transform: translate(-50%, -50%);
+}
+
+@media (pointer: fine) {
+  .star-cursor--on {
+    opacity: 0.85;
+  }
+}
+
+@media (max-width: 380px) {
+  .shell-btn .sound-label {
+    display: none;
+  }
+
+  .envelope-label {
+    font-size: 0.65rem;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 500px) {
+  .scene {
+    justify-content: flex-start;
+    padding-top: calc(var(--header-h) + var(--safe-top) + 0.5rem);
+  }
+
+  .butterfly-field {
+    height: 12rem;
+  }
+
+  .book {
+    width: min(94vw, 34rem);
+    height: min(70dvh, 18rem);
+  }
+
+  .book-pages-inner {
+    padding: 1rem 0.85rem;
+  }
+}
